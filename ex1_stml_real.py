@@ -1,5 +1,5 @@
 import numpy as np
-from utils import generate_streams
+from utils import realstreams
 from strlearn.metrics import balanced_accuracy_score as bac
 from mde import STML
 from tqdm import tqdm
@@ -14,13 +14,14 @@ import multiprocessing
 
 random_state = 1410
 replications = 5
-n_chunks = 1000
+n_chunks_ = [265, 359]
+stml_size_ = [100, 50]
 
-streams = generate_streams(random_state, replications)
+streams = realstreams()
 
 results = []
 
-def worker(stream):
+def worker(stream, n_chunks, stml_size):
 # for stream_id, stream in enumerate(streams):
     print("Start: %s" % (stream))
     
@@ -41,16 +42,16 @@ def worker(stream):
     
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     
-    weights = torch.from_numpy(np.array([0.05, 0.95])).float().to(device)
+    # weights = torch.from_numpy(np.array([0.05, 0.95])).float().to(device)
     
-    criterion = nn.CrossEntropyLoss(weight=weights)
+    criterion = nn.CrossEntropyLoss()
     """
     """
     
     for c in range(n_chunks):
-        X, y = stream.get_chunk()
+        X, y = streams[stream].get_chunk()
         
-        X_stml = STML(X, verbose=False, size=(50, 50))
+        X_stml = STML(X, verbose=False, size=(stml_size, stml_size))
         X_stml = np.swapaxes(X_stml, 1, 3)
         # Second swap for right dimensions
         X_stml = np.swapaxes(X_stml, 2, 3)
@@ -93,13 +94,14 @@ def worker(stream):
                     loss.backward()
                     optimizer.step()
             
-    np.save("results/stml_synth/%s" % stream, results)
+    np.save("results/stml_real/%s" % stream, results)
     print("End: %s" % (stream))
     
     
 jobs = []
 if __name__ == '__main__':
-    for stream in streams:
-        p = multiprocessing.Process(target=worker, args=(stream,))
+    for stream_id, stream in enumerate(streams):
+        p = multiprocessing.Process(target=worker, 
+                                    args=(stream, n_chunks_[stream_id], stml_size_[stream_id]))
         jobs.append(p)
         p.start()

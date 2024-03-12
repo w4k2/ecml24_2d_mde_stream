@@ -3,11 +3,15 @@ import numpy as np
 from tqdm import tqdm
 
 
-def STML(X, size=(224,224), verbose=False):
+def STML(X, size=(224,224), verbose=False, n_cols=None):
     n_features = X.shape[1]
     # Always two columns
     # how much space for each text
-    n_columns = 2 if n_features < 30 else 3
+    if n_cols == None:
+        n_columns = 2 if n_features < 30 else 3
+    else:
+        n_columns = n_cols
+        
     n_rows = np.ceil(n_features/n_columns)
     xs = np.ceil(size[0]/n_columns)
     ys = np.ceil(size[0]/n_rows)

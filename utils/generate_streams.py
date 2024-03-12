@@ -3,11 +3,11 @@ import numpy as np
 
 
 # Generate data streams
-n_chunks = 1000
+n_chunks = 3000
 chunk_size = 250
 # Imabalance
-weights = [[.95, .05]]
-y_flips =[.01]
+weights = [[.85, .15], [.95, .05]]
+y_flips =[.01, .05, .15]
 """
 1. n_drifts
 2. concept_sigmoid_spacing (None for sudden)
@@ -15,7 +15,7 @@ y_flips =[.01]
 4. recurring [True] or non-recurring [False]
 """
 # Sudden, Gradual, Incremental
-drifts = [(10, None, False, False), (10, 5, False, False), (10, 5, True, False)]
+drifts = [(30, None, False, False), (30, 5, False, False), (30, 5, True, False)]
 """
 Concept:
 1. n_features
@@ -26,7 +26,7 @@ Concept:
 """
 concepts = [(8, 8, 0, 0, 1)]
 
-def generate_streams(random_state, replications):
+def generate_imb_streams(random_state, replications):
     random = np.random.RandomState(random_state)
     random_states = random.randint(0, 99999, replications)
     
@@ -42,4 +42,10 @@ def generate_streams(random_state, replications):
                                                             random_state=random)
                         streams.append(stream)
     return streams
-            
+
+# 265, 359
+def realstreams():
+    return {
+        "covtypeNorm-1-2vsAll": sl.streams.ARFFParser("real_streams/covtypeNorm-1-2vsAll-pruned.arff", n_chunks=265, chunk_size=1000),
+        "poker-lsn-1-2vsAll": sl.streams.ARFFParser("real_streams/poker-lsn-1-2vsAll-pruned.arff", n_chunks=359, chunk_size=1000),
+    }

@@ -1,6 +1,7 @@
 import numpy as np
-from utils import realstreams
-from strlearn.metrics import balanced_accuracy_score as bac
+from utils import generate_semisynth_streams
+from strlearn.metrics import balanced_accuracy_score as bac, recall, precision, specificity, f1_score, geometric_mean_score_1, geometric_mean_score_2
+from sklearn.metrics import recall_score, precision_score, balanced_accuracy_score
 from mde import STML
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -14,16 +15,24 @@ import multiprocessing
 
 random_state = 1410
 replications = 5
-n_chunks_ = [265, 359]
-stml_size_ = [100, 50]
+n_chunks_ = 2000
+stml_size_ = 100
 
-streams = realstreams()
+streams = generate_semisynth_streams(random_state, replications)
 
-results = []
+metrics=[recall, recall_score, precision, precision_score, specificity, f1_score, geometric_mean_score_1, geometric_mean_score_2, bac, balanced_accuracy_score]
 
-def worker(stream, n_chunks, stml_size):
+semi_weights = {
+    "popfailures": [0.09, 0.91],
+    "ecoli-0-1-4-6_vs_5": [0.07, 0.93],
+    "glass5": [0.04, 0.96],
+    "yeast6": [0.02, 0.98],
+}
+
+def worker(stream):
 # for stream_id, stream in enumerate(streams):
     print("Start: %s" % (stream))
+    results = []
     
     """
     Model
@@ -41,17 +50,16 @@ def worker(stream, n_chunks, stml_size):
     model = model.to(device)
     
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    weights = torch.from_numpy(np.array(semi_weights[stream.split("_")[0]])).float().to(device)
     
-    # weights = torch.from_numpy(np.array([0.05, 0.95])).float().to(device)
-    
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(weight=weights)
     """
     """
     
-    for c in range(n_chunks):
+    for c in range(n_chunks_):
         X, y = streams[stream].get_chunk()
         
-        X_stml = STML(X, verbose=False, size=(stml_size, stml_size))
+        X_stml = STML(X, verbose=False, size=(stml_size_, stml_size_))
         X_stml = np.swapaxes(X_stml, 1, 3)
         # Second swap for right dimensions
         X_stml = np.swapaxes(X_stml, 2, 3)
@@ -79,8 +87,8 @@ def worker(stream, n_chunks, stml_size):
             logits = model(X_stml.to(device))
             probs = torch.nn.functional.softmax(logits, dim=1).cpu().detach().numpy()
             preds = np.argmax(probs, 1)
-            score =  bac(y_stml.numpy(), preds)
-            results.append(score)
+            scores = [metric(y_stml.numpy(), preds) for metric in metrics]
+            results.append(scores)
             
             model.train()
             for epoch in range(num_epochs):
@@ -93,15 +101,15 @@ def worker(stream, n_chunks, stml_size):
                     loss = criterion(outputs.to(device), labels.to(device))
                     loss.backward()
                     optimizer.step()
-        exit()
-    # np.save("results/stml_real/%s" % stream, results)
-    # print("End: %s" % (stream))
+            
+    np.save("results/stml_semi/%s" % stream, results)
+    print("End: %s" % (stream))
     
     
 jobs = []
 if __name__ == '__main__':
-    for stream_id, stream in enumerate(streams):
-        p = multiprocessing.Process(target=worker, 
-                                    args=(stream, n_chunks_[stream_id], stml_size_[stream_id]))
-        jobs.append(p)
-        p.start()
+    pool = multiprocessing.Pool(processes=10)
+    for stream in streams.keys():
+        pool.apply_async(worker, args=(stream,))
+    pool.close()
+    pool.join()

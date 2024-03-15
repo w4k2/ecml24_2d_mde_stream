@@ -1,5 +1,6 @@
 import strlearn as sl
 import numpy as np
+from .semi_generator import SemiSyntheticStreamGenerator
 
 
 # Generate data streams
@@ -49,3 +50,41 @@ def realstreams():
         "covtypeNorm-1-2vsAll": sl.streams.ARFFParser("real_streams/covtypeNorm-1-2vsAll-pruned.arff", n_chunks=265, chunk_size=1000),
         "poker-lsn-1-2vsAll": sl.streams.ARFFParser("real_streams/poker-lsn-1-2vsAll-pruned.arff", n_chunks=359, chunk_size=1000),
     }
+
+semi_n_chunks = 2000
+semi_chunk_size = 250
+semi_n_drifts = 20
+interpolations = [
+    "linear", 
+    "nearest"
+    ]
+
+def generate_semisynth_streams(random_state, replications):
+    random = np.random.RandomState(random_state)
+    random_states = random.randint(0, 99999, replications)
+    
+    streams = {}
+    
+    datasets = [
+        # "popfailures", 
+        "ecoli-0-1-4-6_vs_5", 
+        # "glass5", 
+        # "yeast6"
+        ]
+    
+    for dataset in datasets:
+        ds = np.genfromtxt("datasets/%s.csv" % dataset, delimiter=",")
+        X = ds[:, :-1]
+        y = ds[:, -1].astype(int)
+        # classes, counts = np.unique(y, return_counts=True)
+        # print(counts[0]/len(y))
+        # print(counts[1]/len(y))
+        
+        for seed in random_states:
+            for interpolation in interpolations:
+                stream = SemiSyntheticStreamGenerator(X, y, n_chunks=semi_n_chunks, chunk_size=semi_chunk_size, n_drifts=semi_n_drifts, n_features=X.shape[1], interpolation=interpolation, random_state=seed, )
+                streams["%s_%s_%i" % (dataset, interpolation, seed)] = stream
+                # stream._make_stream()
+                # print(stream._get_drifts())
+
+    return streams

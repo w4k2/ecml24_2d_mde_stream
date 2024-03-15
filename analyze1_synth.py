@@ -98,7 +98,6 @@ for metric_id ,metric in enumerate(metrics):
     fig, ax = plt.subplots(3, 1, figsize=(15, 10))
     ax = ax.ravel()
     for drift_id , drift in enumerate(drift_scores):
-        drift = np.nan_to_num(drift, nan=0.0)
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
@@ -121,7 +120,6 @@ for metric_id ,metric in enumerate(metrics):
     fig, ax = plt.subplots(2, 1, figsize=(15, 10))
     ax = ax.ravel()
     for drift_id , drift in enumerate(ln_scores):
-        drift = np.nan_to_num(drift, nan=0.0)
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
@@ -144,7 +142,6 @@ for metric_id ,metric in enumerate(metrics):
     fig, ax = plt.subplots(2, 1, figsize=(15, 10))
     ax = ax.ravel()
     for drift_id , drift in enumerate(weight_scores):
-        drift = np.nan_to_num(drift, nan=0.0)
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
@@ -155,5 +152,5 @@ for metric_id ,metric in enumerate(metrics):
             
     plt.legend(ncol=6)
     plt.tight_layout()
-    plt.savefig("figures/ex_imb/d_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/d_%s.png" % metric, dpi=200)
     plt.close()

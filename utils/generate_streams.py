@@ -49,7 +49,7 @@ def realstreams():
     return {
         "covtypeNorm-1-2vsAll": sl.streams.ARFFParser("real_streams/covtypeNorm-1-2vsAll-pruned.arff", n_chunks=265, chunk_size=1000),
         "poker-lsn-1-2vsAll": sl.streams.ARFFParser("real_streams/poker-lsn-1-2vsAll-pruned.arff", n_chunks=359, chunk_size=1000),
-        "INSECTS-abrupt_imbalanced_norm_5prc": sl.streams.ARFFParser("real_streams/INSECTS-abrupt_imbalanced_norm_5prc.arff", n_chunks=300, chunk_size=1000),
+        "INSECTS-abrupt_imbalanced_norm": sl.streams.ARFFParser("real_streams/INSECTS-abrupt_imbalanced_norm.arff", n_chunks=300, chunk_size=1000),
         "INSECTS-gradual_imbalanced_norm_5prc": sl.streams.ARFFParser("real_streams/INSECTS-gradual_imbalanced_norm_5prc.arff", n_chunks=100, chunk_size=1000),
         "INSECTS-incremental_imbalanced_norm_5prc": sl.streams.ARFFParser("real_streams/INSECTS-incremental_imbalanced_norm_5prc.arff", n_chunks=380, chunk_size=1000),
     }

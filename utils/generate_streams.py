@@ -67,7 +67,7 @@ def generate_semisynth_streams(random_state, replications):
     
     datasets = [
         # "popfailures", 
-        "ecoli-0-1-4-6_vs_5", 
+        "ecoli-0-1-4-6-vs-5", 
         # "glass5", 
         # "yeast6"
         ]
@@ -79,6 +79,7 @@ def generate_semisynth_streams(random_state, replications):
         # classes, counts = np.unique(y, return_counts=True)
         # print(counts[0]/len(y))
         # print(counts[1]/len(y))
+        # exit()
         
         for seed in random_states:
             for interpolation in interpolations:

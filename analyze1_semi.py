@@ -9,7 +9,7 @@ from scipy.ndimage import gaussian_filter1d
 
 datasets = [
     "popfailures", 
-    # "ecoli-0-1-4-6_vs_5", 
+    "ecoli-0-1-4-6-vs-5", 
     "glass5", 
     "yeast6"
     ]

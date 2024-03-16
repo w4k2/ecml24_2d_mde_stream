@@ -9,15 +9,10 @@ n_chunks = [265, 359]
 
 methods = [
         "HF",
-        # "SEA",
-        # "AWE",
-        # "AUE",
         "CDS",
         "NIE",
-        "WAE",
         "KUE",
         "ROSE",
-        # "LearnNSE"
     ]
 
 scores = []

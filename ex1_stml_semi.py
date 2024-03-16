@@ -24,7 +24,7 @@ metrics=[recall, recall_score, precision, precision_score, specificity, f1_score
 
 semi_weights = {
     "popfailures": [0.09, 0.91],
-    "ecoli-0-1-4-6_vs_5": [0.07, 0.93],
+    "ecoli-0-1-4-6-vs-5": [0.07, 0.93],
     "glass5": [0.04, 0.96],
     "yeast6": [0.02, 0.98],
 }

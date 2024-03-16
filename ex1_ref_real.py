@@ -11,12 +11,6 @@ random_state = 1410
 n_estimators = 10
 
 streams = realstreams()
-s = streams["INSECTS-abrupt_imbalanced_norm"]
-for c in range(300):
-    print(c)
-    X, y = s.get_chunk()
-    print(X)
-exit()
 
 def worker(stream):
     print("Start: %s" % (stream))

@@ -16,40 +16,40 @@ import multiprocessing
 n_chunks_ = {
         "covtypeNorm-1-2vsAll": 265,
         "poker-lsn-1-2vsAll": 359,
-        "INSECTS-abrupt_imbalanced_norm_5prc": 300,
-        "INSECTS-gradual_imbalanced_norm_5prc": 100,
-        "INSECTS-incremental_imbalanced_norm_5prc": 380,
+        "INSECTS-abrupt_imbalanced_norm": 300,
+        "INSECTS-gradual_imbalanced_norm": 100,
+        "INSECTS-incremental_imbalanced_norm": 380,
     }
 
 stml_size_ = {
         "covtypeNorm-1-2vsAll": 120,
         "poker-lsn-1-2vsAll": 50,
-        "INSECTS-abrupt_imbalanced_norm_5prc": 120,
-        "INSECTS-gradual_imbalanced_norm_5prc": 120,
-        "INSECTS-incremental_imbalanced_norm_5prc": 120,
+        "INSECTS-abrupt_imbalanced_norm": 120,
+        "INSECTS-gradual_imbalanced_norm": 120,
+        "INSECTS-incremental_imbalanced_norm": 120,
     }
 
 stml_cols_ = {
         "covtypeNorm-1-2vsAll": 5,
         "poker-lsn-1-2vsAll": None,
-        "INSECTS-abrupt_imbalanced_norm_5prc": 5,
-        "INSECTS-gradual_imbalanced_norm_5prc": 5,
-        "INSECTS-incremental_imbalanced_norm_5prc": 5,
+        "INSECTS-abrupt_imbalanced_norm": 5,
+        "INSECTS-gradual_imbalanced_norm": 5,
+        "INSECTS-incremental_imbalanced_norm": 5,
     }
 
-weights_ = {
+imb_weights_ = {
         "covtypeNorm-1-2vsAll": [.25, .75],
         "poker-lsn-1-2vsAll": [.1, .9],
-        "INSECTS-abrupt_imbalanced_norm_5prc": [.05, .95],
-        "INSECTS-gradual_imbalanced_norm_5prc": [.05, .95],
-        "INSECTS-incremental_imbalanced_norm_5prc": [.05, .95],
+        "INSECTS-abrupt_imbalanced_norm": [.05, .95],
+        "INSECTS-gradual_imbalanced_norm": [.05, .95],
+        "INSECTS-incremental_imbalanced_norm": [.05, .95],
     }
 
 metrics=[recall, recall_score, precision, precision_score, specificity, f1_score, geometric_mean_score_1, geometric_mean_score_2, bac, balanced_accuracy_score]
 
 streams = realstreams()
 
-def worker(stream, n_chunks, stml_size, stml_cols, weights):
+def worker(stream, n_chunks, stml_size, stml_cols, imb_weights):
 # for stream_id, stream in enumerate(streams):
     print("Start: %s" % (stream))
     results = []
@@ -70,9 +70,9 @@ def worker(stream, n_chunks, stml_size, stml_cols, weights):
     model = model.to(device)
     
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    weightss = torch.from_numpy(np.array(weights)).float().to(device)
+    imb_weight = torch.from_numpy(np.array(imb_weights)).float().to(device)
     
-    criterion = nn.CrossEntropyLoss(weight=weightss)
+    criterion = nn.CrossEntropyLoss(weight=imb_weight)
     """
     """
     
@@ -130,6 +130,6 @@ jobs = []
 if __name__ == '__main__':
     pool = multiprocessing.Pool(processes=5)
     for stream in streams.keys():
-        pool.apply_async(worker, args=(stream, n_chunks_[stream], stml_size_[stream], stml_cols_[stream], weights_[stream]))
+        pool.apply_async(worker, args=(stream, n_chunks_[stream], stml_size_[stream], stml_cols_[stream], imb_weights_[stream]))
     pool.close()
     pool.join()

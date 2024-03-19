@@ -3,15 +3,13 @@ from utils import generate_semisynth_streams
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 
-# random_state = 1410
-# replications = 5
-# streams = generate_semisynth_streams(random_state, replications)
 
 datasets = [
     "popfailures", 
     "ecoli-0-1-4-6-vs-5", 
     "glass5", 
-    "yeast6"
+    "yeast6",
+    "spectfheart"
     ]
 interpolations = [
     "linear", 
@@ -35,8 +33,8 @@ lws = [1, 1, 1 ,1 ,1 ,2]
 lss = ["-", "-", "--", "-", "--", "-"]
 
 # DATASET x DRIFT x REPLICATION x METHODS x CHUNKS x METRICS
-scores = np.zeros((4, 2, 5, 5, 1999, 7))
-scores_stml = np.zeros((4, 2, 5, 1, 1999, 7))
+scores = np.zeros((5, 2, 5, 5, 1999, 7))
+scores_stml = np.zeros((5, 2, 5, 1, 1999, 7))
 
 for dataset_id, dataset in enumerate(datasets):
     for drift_id, drift in enumerate(interpolations):

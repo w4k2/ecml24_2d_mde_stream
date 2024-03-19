@@ -20,13 +20,14 @@ scores_stml = []
 scores_igtd = []
 for stream in streams:
     results = np.load("results/ref_real/%s.npy" % stream)
-    scores.append(results.squeeze())
+    scores.append(results.squeeze()[:, :, 1])
     
-    results_stml = np.load("results/stml_real/%s.npy" % stream)
-    scores_stml.append(results_stml.squeeze())
+    results_stml = np.load("results/stml_real/%s_.npy" % stream)
+    scores_stml.append(results_stml.squeeze()[:, 1])
     
-    results_igtd = np.load("results/igtd_real/%s.npy" % stream)
-    scores_igtd.append(results_igtd.squeeze())
+    
+    # results_igtd = np.load("results/igtd_real/%s.npy" % stream)
+    # scores_igtd.append(results_igtd.squeeze())
 
 # scores_stml = np.array(scores_stml).squeeze()
 # STREAMS x METHODS x CHUNKS x METRICS
@@ -40,7 +41,7 @@ for stream_id , stream in enumerate(streams):
         ax[stream_id].set_xlim(0, n_chunks[stream_id])
         ax[stream_id].grid(ls=":", c=(0.7, 0.7, 0.7))
     ax[stream_id].plot(gaussian_filter1d(scores_stml[stream_id], 2), label="STML", c="red", lw=3)
-    ax[stream_id].plot(gaussian_filter1d(scores_igtd[stream_id], 2), label="IGTD", c="blue", lw=3)
+    # ax[stream_id].plot(gaussian_filter1d(scores_igtd[stream_id], 2), label="IGTD", c="blue", lw=3)
 
 plt.legend(ncol=8)
 plt.tight_layout()

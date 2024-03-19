@@ -128,7 +128,7 @@ def worker(stream, n_chunks, stml_size, stml_cols, imb_weights):
     
 jobs = []
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(processes=5)
+    pool = multiprocessing.Pool(processes=2)
     for stream in streams.keys():
         pool.apply_async(worker, args=(stream, n_chunks_[stream], stml_size_[stream], stml_cols_[stream], imb_weights_[stream]))
     pool.close()

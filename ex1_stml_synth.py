@@ -32,7 +32,8 @@ def worker(stream):
     num_classes = 2
     batch_size = 8
     num_epochs = 1
-    weights = ResNet18_Weights.IMAGENET1K_V1
+    # weights = ResNet18_Weights.IMAGENET1K_V1
+    weights = None
     
     model = resnet18(weights=weights)
     num_ftrs = model.fc.in_features
@@ -44,11 +45,11 @@ def worker(stream):
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     
     if "d95" in str(stream):
-        weights = torch.from_numpy(np.array([0.05, 0.95])).float().to(device)
+        imb_weights = torch.from_numpy(np.array([0.05, 0.95])).float().to(device)
     if "d85" in str(stream):
-        weights = torch.from_numpy(np.array([0.15, 0.85])).float().to(device)
+        imb_weights = torch.from_numpy(np.array([0.15, 0.85])).float().to(device)
         
-    criterion = nn.CrossEntropyLoss(weight=weights)
+    criterion = nn.CrossEntropyLoss(weight=imb_weights)
     """
     """
     
@@ -100,7 +101,7 @@ def worker(stream):
                     optimizer.step()
     
     results = np.array(results)
-    np.save("results/stml_synth/%s_imb" % stream, results)
+    np.save("results/stml_synth/%s_imb_notransfer" % stream, results)
     print("End: %s" % (stream))
     
     

@@ -1,6 +1,7 @@
 import strlearn as sl
 import numpy as np
 from .semi_generator import SemiSyntheticStreamGenerator
+import os
 
 
 # Generate data streams
@@ -8,7 +9,8 @@ n_chunks = 3000
 chunk_size = 250
 # Imabalance
 weights = [[.85, .15], [.95, .05]]
-y_flips =[.01, .05, .15]
+# y_flips =[.01, .05, .15]
+y_flips =[.01, .05]
 """
 1. n_drifts
 2. concept_sigmoid_spacing (None for sudden)
@@ -53,6 +55,15 @@ def realstreams():
         # "INSECTS-gradual_imbalanced_norm": sl.streams.ARFFParser("real_streams/INSECTS-gradual_imbalanced_norm.arff", n_chunks=100, chunk_size=1000),
         # "INSECTS-incremental_imbalanced_norm": sl.streams.ARFFParser("real_streams/INSECTS-incremental_imbalanced_norm.arff", n_chunks=380, chunk_size=1000),
     }
+    
+def moa_streams():
+    streams = {}
+    moa_files = os.listdir("moa_streams/")
+    for file in moa_files:
+        if "arff" in file:
+            streams["%s" % file.split(".")[0]] = sl.streams.ARFFParser("moa_streams/%s" % file, n_chunks=2000, chunk_size=250)
+    
+    return streams
 
 semi_n_chunks = 2000
 semi_chunk_size = 250

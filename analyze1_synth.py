@@ -2,10 +2,15 @@ import numpy as np
 from utils import generate_imb_streams
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
+import matplotlib
+
+
+matplotlib.rcParams.update({'font.size': 16, "font.family" : "monospace"})
 
 random_state = 1410
 replications = 5
 streams = generate_imb_streams(random_state, replications)
+filtr = 10
 
 metrics=["recall", "precision", "specificity", "f1_score", "geometric_mean_score_1", "geometric_mean_score_2", "bac"]
 
@@ -18,9 +23,12 @@ methods = [
         "STML"
     ]
 
-colors = ['gray', 'green', 'green', 'blue', 'blue', 'red']
-lws = [1, 1, 1 ,1 ,1 ,2]
-lss = ["-", "-", "--", "-", "--", "-"]
+# colors = ['gray', 'green', 'green', 'blue', 'blue', 'red']
+# lws = [1, 1, 1 ,1 ,1 ,2]
+# lss = ["-", "-", "--", "-", "--", "-"]
+colors = ['silver', 'darkorange', 'seagreen', 'darkorchid', 'dodgerblue', 'red']
+lws = [1.5, 1.5, 1.5 ,1.5 ,1.5 ,2]
+lss = ["-", "-", "-", "-", "-", "-"]
 
 # DRIFT x STREAM x METHODS x CHUNKS x METRICS
 drift_scores = np.zeros((3, 20, 5, 2999, 7))
@@ -95,20 +103,24 @@ Drift type
 drift_names = ["Sudden drift", "Gradual drift", "Incremental drift"]
 
 for metric_id ,metric in enumerate(metrics):
-    fig, ax = plt.subplots(3, 1, figsize=(15, 10))
+    fig, ax = plt.subplots(3, 1, figsize=(13, 10))
     ax = ax.ravel()
     for drift_id , drift in enumerate(drift_scores):
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
-            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
-            ax[drift_id].set_ylim(0.1, 1.0)
+            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
             ax[drift_id].set_title(drift_names[drift_id])
+            ax[drift_id].spines[['right', 'top']].set_visible(False)
+            ax[drift_id].set_ylim(0.5, 1.0)
+            ax[drift_id].set_xlabel("chunks")
+            ax[drift_id].set_ylabel("BAC")
             
-    plt.legend(ncol=6)
+    ax[0].legend(ncol=6, frameon=False, loc="upper center", bbox_to_anchor=(.5, 1.45), fontsize=17)
     plt.tight_layout()
-    plt.savefig("figures/ex_imb/drift_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/drift_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/drift_%s.eps" % metric)
     plt.close()
 
 """
@@ -117,20 +129,24 @@ Label noise
 ln_names = ["1% label noise", "5% label noise"]
 
 for metric_id ,metric in enumerate(metrics):
-    fig, ax = plt.subplots(2, 1, figsize=(15, 10))
+    fig, ax = plt.subplots(2, 1, figsize=(9, 12))
     ax = ax.ravel()
     for drift_id , drift in enumerate(ln_scores):
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
-            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
-            ax[drift_id].set_ylim(0.1, 1.0)
+            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
             ax[drift_id].set_title(ln_names[drift_id])
+            ax[drift_id].spines[['right', 'top']].set_visible(False)
+            ax[drift_id].set_ylim(0.5, 1.0)
+            ax[drift_id].set_xlabel("chunks")
+            ax[drift_id].set_ylabel("BAC")
             
-    plt.legend(ncol=6)
+    # ax[0].legend(ncol=6, frameon=False, loc="upper center", bbox_to_anchor=(.5, 1.25), fontsize=17)
     plt.tight_layout()
-    plt.savefig("figures/ex_imb/ln_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/ln_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/ln_%s.eps" % metric)
     plt.close()
     
 """
@@ -139,18 +155,22 @@ Imbalance ratio
 imb_names = ["15% minority", "5% minority"]
 
 for metric_id ,metric in enumerate(metrics):
-    fig, ax = plt.subplots(2, 1, figsize=(15, 10))
+    fig, ax = plt.subplots(2, 1, figsize=(9, 12))
     ax = ax.ravel()
     for drift_id , drift in enumerate(weight_scores):
         mean_drift_scores = np.mean(drift, axis=0)
         for method_id, method in enumerate(methods):
-            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], 3), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
-            ax[drift_id].set_ylim(0.1, 1.0)
+            ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
             ax[drift_id].set_title(imb_names[drift_id])
+            ax[drift_id].spines[['right', 'top']].set_visible(False)
+            ax[drift_id].set_ylim(0.5, 1.0)
+            ax[drift_id].set_xlabel("chunks")
+            ax[drift_id].set_ylabel("BAC")
             
-    plt.legend(ncol=6)
+    # ax[0].legend(ncol=6, frameon=False, loc="upper center", bbox_to_anchor=(.5, 1.25), fontsize=17)
     plt.tight_layout()
     plt.savefig("figures/ex_synth/d_%s.png" % metric, dpi=200)
+    plt.savefig("figures/ex_synth/d_%s.eps" % metric)
     plt.close()

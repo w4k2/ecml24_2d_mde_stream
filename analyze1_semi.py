@@ -20,8 +20,8 @@ interpolations = [
     "linear"
     ]
 drift_name = [
-    "sudden",
-    "incremental"
+    "sudden drift",
+    "incremental drift"
 ]
 seeds = [2417, 22389, 55694, 79760, 95859]
 
@@ -99,7 +99,7 @@ for metric_id ,metric in enumerate(metrics):
             ax[drift_id].plot(gaussian_filter1d(drift_scores[method_id], 10), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 2000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
-            ax[drift_id].set_title("Semi-synthetic %s" % (drift_name[drift_id]))
+            ax[drift_id].set_title("stream-learn semi-synthetic %s" % (drift_name[drift_id]))
             ax[drift_id].spines[['right', 'top']].set_visible(False)
             ax[drift_id].set_ylim(0.5, 1.0)
             ax[drift_id].set_xlabel("chunks")

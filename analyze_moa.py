@@ -10,7 +10,7 @@ matplotlib.rcParams.update({'font.size': 16, "font.family" : "monospace"})
 
 
 drifts = ["sd", "id"]
-drift_names = ["sudden", "incremental"]
+drift_names = ["sudden drift", "incremental drift"]
 generators = ["sea", "rbf", "hyp"]
 replications = ["rep1", "rep2", "rep3"]
 # drift x generator x replication x methods x chunks x metrics
@@ -83,7 +83,7 @@ for metric_id, metric in enumerate(metrics):
         mean_drift_scores = gather_mean_drifts[drift_id, :, :, metric_id]
         for method_id, method in enumerate(methods):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id], 5), label=method, ls=lss[method_id], lw=lws[method_id], c=colors[method_id])
-            ax[drift_id].set_title("MOA %s" % (drift_names[drift_id]))
+            ax[drift_id].set_title("MOA synthetic %s" % (drift_names[drift_id]))
             ax[drift_id].spines[['right', 'top']].set_visible(False)
             ax[drift_id].set_ylim(0.5, 1.0)
             ax[drift_id].set_xlabel("chunks")

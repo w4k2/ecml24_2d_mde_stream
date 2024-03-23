@@ -34,7 +34,7 @@ colors = ['silver', 'darkorange', 'seagreen', 'darkorchid', 'dodgerblue', 'red']
 lws = [1.5, 1.5, 1.5 ,1.5 ,1.5 ,2]
 lss = ["-", "-", "-", "-", "-", "-"]
 
-fig, ax = plt.subplots(1, 2, figsize=(15, 10))
+fig, ax = plt.subplots(1, 2, figsize=(15, 9))
 
 for method_id, method in enumerate(methods):
     ax[0].plot([0, 16, 32, 64], mean_time[:, method_id], ls=lss[method_id], lw=lws[method_id], c=colors[method_id], label=method)

@@ -100,7 +100,7 @@ weight_scores = np.concatenate((weight_scores, stml_weight_scores), axis=2)
 """
 Drift type
 """
-drift_names = ["Sudden drift", "Gradual drift", "Incremental drift"]
+drift_names = ["sudden drift", "gradual drift", "incremental drift"]
 
 for metric_id ,metric in enumerate(metrics):
     fig, ax = plt.subplots(3, 1, figsize=(13, 10))
@@ -111,7 +111,7 @@ for metric_id ,metric in enumerate(metrics):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
-            ax[drift_id].set_title(drift_names[drift_id])
+            ax[drift_id].set_title("stream-learn synthetic %s" % drift_names[drift_id])
             ax[drift_id].spines[['right', 'top']].set_visible(False)
             ax[drift_id].set_ylim(0.5, 1.0)
             ax[drift_id].set_xlabel("chunks")
@@ -137,7 +137,7 @@ for metric_id ,metric in enumerate(metrics):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
-            ax[drift_id].set_title(ln_names[drift_id])
+            ax[drift_id].set_title("stream-learn synthetic %s" % ln_names[drift_id])
             ax[drift_id].spines[['right', 'top']].set_visible(False)
             ax[drift_id].set_ylim(0.5, 1.0)
             ax[drift_id].set_xlabel("chunks")
@@ -163,7 +163,7 @@ for metric_id ,metric in enumerate(metrics):
             ax[drift_id].plot(gaussian_filter1d(mean_drift_scores[method_id, :, metric_id], filtr), label=method, ls=lss[method_id], c=colors[method_id], lw=lws[method_id])
             ax[drift_id].set_xlim(0, 3000)
             ax[drift_id].grid(ls=":", c=(0.7, 0.7, 0.7))
-            ax[drift_id].set_title(imb_names[drift_id])
+            ax[drift_id].set_title("stream-learn synthetic %s" % imb_names[drift_id])
             ax[drift_id].spines[['right', 'top']].set_visible(False)
             ax[drift_id].set_ylim(0.5, 1.0)
             ax[drift_id].set_xlabel("chunks")

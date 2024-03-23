@@ -110,6 +110,6 @@ for llo, lla in zip(label_loc*step, metrics):
     #  print(a)
      ax.text(llo, 1.05, lla, rotation=a, ha='center', va='center',weight="bold")
      
-plt.title("MOA sudden drift", fontsize=17, x=0.5, y=1.07)
+plt.title("MOA synthetic sudden drift", fontsize=17, x=0.5, y=1.07)
 plt.savefig("figures/radars/radar_moa_sudden.png")
 plt.savefig("figures/radars/radar_moa_sudden.eps")

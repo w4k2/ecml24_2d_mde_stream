@@ -34,7 +34,7 @@ colors = ['silver', 'darkorange', 'seagreen', 'darkorchid', 'dodgerblue', 'red']
 lws = [1.5, 1.5, 1.5 ,1.5 ,1.5 ,2]
 lss = ["-", "-", "-", "-", "-", "-"]
 
-fig, ax = plt.subplots(1, 2, figsize=(15, 9))
+fig, ax = plt.subplots(1, 2, figsize=(15, 7))
 
 for method_id, method in enumerate(methods):
     ax[0].plot([0, 16, 32, 64], mean_time[:, method_id], ls=lss[method_id], lw=lws[method_id], c=colors[method_id], label=method)
@@ -62,7 +62,7 @@ for method_id, method in enumerate(methods):
 ax[1].bar(methods, np.mean(mean_time, axis=0), color=colors)
 ax[1].grid(ls=":", c=(0.7, 0.7, 0.7))
 ax[1].set_xlabel("method")
-ax[1].set_ylabel("Mean chunk processing time across all feature numbers [s]")
+ax[1].set_ylabel("Mean processing time for all features [s]")
 ax[1].set_ylim(0, 3.5)
 ax[1].spines[['right', 'top']].set_visible(False)
 # fig.legend(ncol=6, frameon=False, loc="upper center", bbox_to_anchor=(.5, 1.06), fontsize=17)

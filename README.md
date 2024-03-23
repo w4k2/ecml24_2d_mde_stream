@@ -1,1 +1,1 @@
-# stream_modality_encoding
+# Anonymized ECML 2024 Employing Two-Dimensional Word Embedding for Difficult Tabular Data Stream Classification

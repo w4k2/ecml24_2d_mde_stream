@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import generate_imb_streams
+import matplotlib
+
+
+matplotlib.rcParams.update({'font.size': 16, "font.family" : "monospace"})
 
 
 random_state = 1410
@@ -38,12 +42,13 @@ drift_scores = np.nan_to_num(drift_scores, nan=0.0)
 stml_drift_scores = np.nan_to_num(stml_drift_scores, nan=0.0)
 drift_scores = np.concatenate((drift_scores, stml_drift_scores), axis=2)
 
-drift_scores = drift_scores[:, :, :, 1000:]
+# DRIFT x STREAM x METHODS x CHUNKS x METRICS
+drift_scores = drift_scores[:, :, :, :]
 
 # values, counts = np.unique(drift_scores[0, :, 5, :, 6], return_counts=True)
 # print(values, counts)
 
-metrics=["Recall", "Precision", "Specificity", "F1", "Gmean", "Gmeans", "BAC"]
+metrics=["Recall", "Precision", "Specificity", "F1", "Gmean", "Gmean$_s$", "BAC"]
 
 methods = [
         "HF",
@@ -54,16 +59,16 @@ methods = [
         "STML"
     ]
 
-colors = ['gray', 'green', 'green', 'blue', 'blue', 'red']
-lws = [2, 2, 2 ,2 ,2 ,3]
-lss = ["-", "-", "--", "-", "--", "-"]
+colors = ['silver', 'darkorange', 'seagreen', 'darkorchid', 'dodgerblue', 'red']
+lws = [1.5, 1.5, 1.5 ,1.5 ,1.5 ,2]
+lss = ["-", "-", "-", "-", "-", "-"]
 
 # DRIFT x METHODS x METRICS
-mean_drift_scores = np.mean(drift_scores, axis=(1, 3))[2]
-std_drift_scores = np.mean(drift_scores, axis=(1, 3))[2]
+mean_drift_scores = np.mean(drift_scores, axis=(1, 3))[0]
+# std_drift_scores = np.mean(drift_scores, axis=(1, 3))[2]
 
 mean_drift_scores = np.concatenate((mean_drift_scores, mean_drift_scores[:,:1]), axis=1)
-std_drift_scores = np.concatenate((std_drift_scores, std_drift_scores[:,:1]), axis=1)
+# std_drift_scores = np.concatenate((std_drift_scores, std_drift_scores[:,:1]), axis=1)
 
 label_loc = np.linspace(start=0, stop=2 * np.pi, num=len(metrics)+1)
 plt.figure(figsize=(7, 7))
@@ -72,7 +77,7 @@ ax = plt.subplot(polar=True)
 for method_id, method in enumerate(methods):
     # print(method)
     m = mean_drift_scores[method_id]
-    s = std_drift_scores[method_id]
+    # s = std_drift_scores[method_id]
     plt.plot(label_loc, m, label=method, c=colors[method_id], lw=lws[method_id], ls=lss[method_id])
     # plt.fill_between(label_loc, m-s, m+s, color=colors[method_id], alpha=0.2)
 
@@ -86,7 +91,7 @@ plt.ylim(0,1)
 
 gpoints = np.linspace(0,1,6)
 plt.gca().set_yticks(gpoints)
-plt.legend(loc=(0.9, 0.9), frameon=False)
+# plt.legend(loc=(0.9, 0.9), frameon=False)
 
 ax.grid(lw=0)
 ax.set_xticks(label_loc[:-1])
@@ -113,8 +118,10 @@ for llo, lla in zip(label_loc*step, metrics):
      a = np.rad2deg(llo+np.pi/2) if llo > np.pi else np.rad2deg(llo-np.pi/2)
     #  print(a)
      ax.text(llo, 1.05, lla, rotation=a, ha='center', va='center',weight="bold")
-    
-plt.savefig("wuj.png")
+     
+plt.title("stream-learn sudden drift", fontsize=17, x=0.5, y=1.07)
+plt.savefig("figures/radars/radar_sl_sudden.png")
+plt.savefig("figures/radars/radar_sl_sudden.eps")
 
 
 

@@ -20,7 +20,7 @@ methods = [
         "NIE",
         "KUE",
         "ROSE",
-        "STML"
+        "SSTML"
     ]
 
 # colors = ['gray', 'green', 'green', 'blue', 'blue', 'red']

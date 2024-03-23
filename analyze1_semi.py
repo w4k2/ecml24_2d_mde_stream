@@ -91,7 +91,7 @@ Mean drift
 mean_drift_scores = np.mean(mean_scores, axis=0)
 
 for metric_id ,metric in enumerate(metrics):
-    fig, ax = plt.subplots(2, 1, figsize=(9, 12))
+    fig, ax = plt.subplots(2, 1, figsize=(15, 10))
     ax = ax.ravel()
     for drift_id , drift in enumerate(interpolations):
         drift_scores = mean_drift_scores[drift_id, :, :, metric_id]

@@ -42,7 +42,7 @@ methods = [
         "NIE",
         "KUE",
         "ROSE",
-        "STML"
+        "SSTML"
     ]
 colors = ['silver', 'darkorange', 'seagreen', 'darkorchid', 'dodgerblue', 'red']
 lws = [1.5, 1.5, 1.5 ,1.5 ,1.5 ,2]
